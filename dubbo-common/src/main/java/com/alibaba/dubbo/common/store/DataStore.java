@@ -21,6 +21,9 @@ import com.alibaba.dubbo.common.extension.SPI;
 
 import java.util.Map;
 
+/**
+ * 数据存储
+ */
 @SPI("simple")
 public interface DataStore {
 
