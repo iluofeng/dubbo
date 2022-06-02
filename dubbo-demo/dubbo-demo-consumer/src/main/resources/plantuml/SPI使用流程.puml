@@ -1,0 +1,16 @@
+@startuml
+
+start
+:定义SPI接口;
+:定义SPI接口实现类;
+:在 META-INF/services 或 META-INF/dubbo
+或 META-INF/dubbo/internal 目录下创建配置文件，
+文件名为SPI接口的全限定名，文件内容为key=value形式，
+value为实现类全限定名;
+:使用 ExtensionLoader.getExtensionLoader(接口class).getExtension(key)，
+获取具体实现类;
+:调用具体实现类方法;
+
+stop
+
+@enduml

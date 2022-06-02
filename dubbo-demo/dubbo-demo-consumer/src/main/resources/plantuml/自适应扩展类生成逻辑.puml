@@ -1,0 +1,26 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:通过 getAdaptiveExtension 方法获取 自适应扩展;
+
+:getAdaptiveExtension方法：从缓存中获取自适应拓展，未获取到则通过 createAdaptiveExtension 方法创建;
+
+:createAdaptiveExtension方法：
+1.调用 getAdaptiveExtensionClass 方法获取自适应拓展 Class 对象，
+2.通过反射进行实例化，
+3.调用 injectExtension 方法向拓展实例中注入依赖;
+
+:getAdaptiveExtensionClass方法：
+1.调用 getExtensionClasses 获取所有的拓展类，判断实现类是否被 Adaptive 注解修饰
+2.检查缓存，若缓存不为空，则返回缓存
+3.若缓存为空，则调用 createAdaptiveExtensionClass 创建自适应拓展类;
+
+:createAdaptiveExtensionClass方法：调用 createAdaptiveExtensionClassCode 方法构建自适应拓展代码，
+通过 Compiler 实例（Dubbo 默认使用 javassist 作为编译器）编译源码，得到代理类 Class 实例;
+
+:createAdaptiveExtensionClassCode方法：构建自适应拓展类代码;
+
+stop
+
+@enduml

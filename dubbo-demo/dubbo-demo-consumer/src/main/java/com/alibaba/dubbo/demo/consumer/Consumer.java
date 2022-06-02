@@ -19,6 +19,7 @@ package com.alibaba.dubbo.demo.consumer;
 import com.alibaba.dubbo.common.extension.ExtensionLoader;
 import com.alibaba.dubbo.common.store.DataStore;
 import com.alibaba.dubbo.demo.DemoService;
+import com.alibaba.dubbo.rpc.Protocol;
 import com.alibaba.dubbo.rpc.cluster.LoadBalance;
 import com.alibaba.fastjson.JSON;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -28,33 +29,37 @@ public class Consumer {
     public static void main(String[] args) {
         //Prevent to get IPV6 address,this way only work in debug mode
         //But you can pass use -Djava.net.preferIPv4Stack=true,then it work well whether in debug mode or not
-        //设置jvm属性，禁用IPV6
+        // 设置jvm属性，禁用IPV6
         System.setProperty("java.net.preferIPv4Stack", "true");
-        //通过ClassPathXmlApplicationContext创建BeanFactory，加载xml文件中的bean
+        // 通过ClassPathXmlApplicationContext创建BeanFactory，加载xml文件中的bean
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"META-INF/spring/dubbo-demo-consumer.xml"});
         //启动spring容器
         context.start();
+        System.out.println("Consumer 启动成功");
 
-        /*
-        while (true) {
-            try {
-                Thread.sleep(1000);
-                //获取远程服务代理
-                DemoService demoService = (DemoService) context.getBean("demoService");
-                //调用远程服务方法
-                String hello = demoService.sayHello("world");
-                System.out.println(hello);
 
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
-            }
-        }*/
-
+        // 通过 ExtensionLoader 的 getExtensionLoader 方法获取一个 ExtensionLoader 实例，
+        // 然后再通过 ExtensionLoader 的 getExtension 方法获取拓展类对象。
+        // 这其中，getExtensionLoader 方法用于从缓存中获取与拓展类对应的 ExtensionLoader，若缓存未命中，则创建一个新的实例。
         ExtensionLoader<DataStore> extensionLoader = ExtensionLoader.getExtensionLoader(DataStore.class);
         DataStore myDataStore = extensionLoader.getExtension("myDataStore");
         myDataStore.put("test","name","luofeng");
         String value = (String) myDataStore.get("test","name");
         System.out.println(value);
+
+        try {
+            Thread.sleep(1000);
+            //获取远程服务代理
+            DemoService demoService = (DemoService) context.getBean("demoService");
+            //调用远程服务方法
+            String hello = demoService.sayHello("world");
+            System.out.println(hello);
+
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+
+        //Protocol protocol = ExtensionLoader.getExtensionLoader(Protocol.class).getAdaptiveExtension();
 
     }
 }

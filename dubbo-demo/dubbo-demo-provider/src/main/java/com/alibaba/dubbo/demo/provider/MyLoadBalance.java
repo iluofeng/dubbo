@@ -1,4 +1,4 @@
-package com.alibaba.dubbo.demo.consumer;
+package com.alibaba.dubbo.demo.provider;
 
 import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.rpc.Invocation;

@@ -1,0 +1,14 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:SPI接口方法添加 @Adaptive 注解，方法增加 URL 参数;
+:Dubbo 会为有 @Adaptive 注解方法的扩展接口生成适配类，
+在适配类中，就可以通过URL对象的参数来确定到底调用哪个实现类;
+:当有地方调用扩展类的方法时，首先会调用适配类的方法，然后适配类再根据扩展名称
+调用 getExtension 方法拿到对应的扩展类对象，最后调用该对象的方法;
+:dubbo服务调用时，会将 URL 传递过来，从而根据 URL 中的参数获取具体扩展实现;
+
+stop
+
+@enduml

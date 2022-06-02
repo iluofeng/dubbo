@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:通过 getExtensionLoader 方法获取 ExtensionLoader 实例;
+:getExtensionLoader方法：从缓存中获取与扩展类对应的 ExtensionLoader，
+若缓存未命中，则创建一个新的实例;
+:获取 ExtensionLoader 实例后，通过 getExtension 方法获取具体扩展类对象;
+:getExtension方法：从缓存中获取扩展实例，缓存中没有，则通过 createExtension 方法创建扩展实例;
+:createExtension方法：通过 getExtensionClasses 方法从配置文件中加载所有的扩展类，
+可得到"配置项名称"到"配置类"的映射关系表，根据传入的 key 从映射关系表取出 class，并通过反射实例化;
+:getExtensionClasses方法：调用 loadExtensionClasses 方法加载扩展类;
+:loadExtensionClasses方法：获取SPI注解，检测SPI注解内容是否合法，获取默认名称，
+调用 loadDirectory 方法加载指定文件夹下的配置文件;
+:loadDirectory方法：根据文件夹路径 + type 全限定名，通过 loadResource 方法加载资源;
+:loadResource方法：读取和解析配置文件，并通过 loadClass 方法加载类;
+:loadClass方法：通过反射加载类，存储映射关系，存入缓存;
+
+stop
+
+@enduml
